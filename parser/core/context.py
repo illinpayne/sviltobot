@@ -1,4 +1,3 @@
-# parser/core/context.py
 from .models import ParseConfig
 from ..strategies.base import BaseRegionParser
 

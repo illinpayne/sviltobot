@@ -40,9 +40,9 @@ class ChernivtsiParser(BaseRegionParser):
 
         queues_data = {}
 
-        for i in range(1, 13):
-            queues_data[f"{i}.1"] = []
-            queues_data[f"{i}.2"] = []
+        queues_data = {
+            f"{i}.{j}": [] for i in range(1, 7) for j in (1, 2)
+        }
 
         groups = soup.find_all("div", class_="group")
 
@@ -73,9 +73,11 @@ class ChernivtsiParser(BaseRegionParser):
                         end = self.normalize_time(time_match.group(2))
                         time_range = f"{start} - {end}"
 
-                        for subgroup in (f"{queue_id}.1", f"{queue_id}.2"):
-                            if subgroup in queues_data:
-                                queues_data[subgroup].append(time_range)
+                        queue_num = int(queue_id)
+
+                        if 1 <= queue_num <= 6:
+                            queues_data[f"{queue_num}.1"].append(time_range)
+                            queues_data[f"{queue_num}.2"].append(time_range)
 
         for queue in queues_data:
             queues_data[queue] = self.merge_time_ranges(queues_data[queue])

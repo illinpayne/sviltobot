@@ -5,9 +5,6 @@ from telebot.types import (
     KeyboardButton,
 )
 
-DONATION_LINK = "https://send.monobank.ua/jar/YOUR_DONATION_JAR_ID"
-
-
 # ГОЛОВНЕ МЕНЮ
 
 def main_menu_keyboard():
@@ -146,9 +143,6 @@ def schedule_navigation_keyboard(current_mode: str, show_all_queues: bool):
 # ВИБІР НАГАДУВАННЯ (запас)
 
 def reminder_selection_keyboard(city: str, selected_queues: list, outage_finder):
-    """
-    Зараз не використовується в main.py, але залишаємо як helper на майбутнє.
-    """
     kb = InlineKeyboardMarkup(row_width=1)
     all_events = []
 
@@ -168,7 +162,9 @@ def reminder_selection_keyboard(city: str, selected_queues: list, outage_finder)
 # ДОПОМОГА / ДОНАТ
 
 def help_keyboard():
+    
+    DONATION_LINK = "https://send.monobank.ua/jar/YOUR_DONATION_JAR_ID"
     kb = InlineKeyboardMarkup()
-    kb.add(InlineKeyboardButton("💸 Підтримати розробника", url=DONATION_LINK))
+    kb.add(InlineKeyboardButton("💸 Підтримати розробників", url=DONATION_LINK))
     kb.add(InlineKeyboardButton("⬅ Назад", callback_data="menu_back"))
     return kb

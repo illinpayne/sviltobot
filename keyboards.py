@@ -41,7 +41,7 @@ def profile_keyboard(prof: dict):
 
     kb.add(InlineKeyboardButton("🌍 Змінити місто", callback_data="profile_change_city"))
     kb.add(InlineKeyboardButton("➕ Додати/редагувати черги", callback_data="profile_edit"))
-    kb.add(InlineKeyboardButton(f"🔔 Оновлення графіку: {notif}", callback_data="profile_toggle_notif"))
+    kb.add(InlineKeyboardButton(f"🔔 Сповіщення про оновлення графіку: {notif}", callback_data="profile_toggle_notif"))
     kb.add(InlineKeyboardButton(f"⏰ Нагадування: {rem_text}", callback_data="profile_reminders"))
 
     return kb

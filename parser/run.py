@@ -1,5 +1,8 @@
 import asyncio
+
+from parser.strategies.odesa import OdesaParser
 from parser.strategies.rivne import RivneParser
+from parser.strategies.volyn import VolynParser
 from parser.core.models import ParseConfig
 from parser.scheduler.scheduler import run_periodically
 
@@ -7,19 +10,27 @@ parsers = [
     (
         ParseConfig(
             region_name="Рівненська область",
-            url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622352/",
+            url="https://alerts.org.ua/rivnenska-oblast/",
             save_path="data/rivne.json"
         ),
         RivneParser()
     ),
-    # (
-    #     ParseConfig(
-    #         region_name="Одеська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622336/",
-    #         save_path="data/odesa.json"
-    #     ),
-    #     parser
-    # ),
+    (
+        ParseConfig(
+            region_name="Одеська область",
+            url="https://alerts.org.ua/odeska-oblast/",
+            save_path="data/odesa.json"
+        ),
+        OdesaParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Волинська область",
+            url="https://alerts.org.ua/volynska-oblast/",
+            save_path="data/volyn.json"
+        ),
+        VolynParser
+    ),
     # (
     #     ParseConfig(
     #         region_name="Тернопільська область",
@@ -36,14 +47,7 @@ parsers = [
     #     ),
     #     parser
     # ),
-    # (
-    #     ParseConfig(
-    #         region_name="Волинська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622240/",
-    #         save_path="data/volyn.json"
-    #     ),
-    #     parser
-    # ),
+
     # (
     #     ParseConfig(
     #         region_name="Житомирська область",

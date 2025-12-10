@@ -7,25 +7,13 @@ from .base import BaseRegionParser
 
 class RivneParser(BaseRegionParser):
 
-    def parse_queue_string(self, queue_str: str) -> list:
-
-        # Парсить рядок типу "2(1,2)" або "5(1,2)" в список ["2.1", "2.2"]
-        # Також обробляє "4(2)" -> ["4.2"], "2(1)" -> ["2.1"]
-
-        match = re.match(r'(\d+)\(([0-9,]+)\)', queue_str)
-        if match:
-            main_queue = match.group(1)
-            sub_queues = match.group(2).split(',')
-            return [f"{main_queue}.{sub.strip()}" for sub in sub_queues]
-        return []
+    def normalize_time(self, time_str: str) -> str:
+        return time_str.replace('.', '-')
 
     def merge_time_ranges(self, time_ranges: list) -> list:
-
-        # Об'єднує послідовні часові діапазони.
-        # ["00-00 - 02-00", "02-00 - 05-00"] -> ["00-00 - 05-00"]
-        #
         if not time_ranges:
-            return []
+              return []
+
 
         sorted_ranges = sorted(time_ranges, key=lambda x: x.split(" - ")[0])
 
@@ -33,13 +21,12 @@ class RivneParser(BaseRegionParser):
         current_start, current_end = sorted_ranges[0].split(" - ")
 
         for time_range in sorted_ranges[1:]:
-            start, end = time_range.split(" - ")
-
-            if current_end == start:
-                current_end = end
-            else:
-                merged.append(f"{current_start} - {current_end}")
-                current_start, current_end = start, end
+                start, end = time_range.split(" - ")
+                if current_end == start:
+                    current_end = end
+                else:
+                    merged.append(f"{current_start} - {current_end}")
+                    current_start, current_end = start, end
 
         merged.append(f"{current_start} - {current_end}")
 
@@ -60,44 +47,38 @@ class RivneParser(BaseRegionParser):
             "6.1": [], "6.2": []
         }
 
-        hours_table = soup.find_all("table")[0]
-        rows = hours_table.find_all("tr")
+        groups = soup.find_all("div", class_="group")
 
-        time_row = rows[0].find_all("td")[1:]
-        queue_row = rows[1].find_all("td")[1:]
-
-        for time_cell, queue_cell in zip(time_row, queue_row):
-            time_paragraphs = time_cell.find_all("p")
-            times = [p.get_text(strip=True) for p in time_paragraphs if p.get_text(strip=True)]
-
-            if len(times) >= 2:
-                start = times[0]
-                end = times[1]
-            elif len(times) == 1:
-                parts = times[0].split()
-                if len(parts) >= 2:
-                    start = parts[0]
-                    end = parts[1]
-                else:
-                    start = end = times[0]
-            else:
+        for group in groups:
+            name_tag = group.find("b", class_="name")
+            if not name_tag:
                 continue
 
-            time_range = f"{start} - {end}"
+            group_name = name_tag.get_text(strip=True)
+            match = re.search(r'(\d+\.\d+)', group_name)
+            if not match:
+                continue
 
-            queue_paragraphs = queue_cell.find_all("p")
-            queue_strings = [p.get_text(strip=True) for p in queue_paragraphs if p.get_text(strip=True)]
+            queue_id = match.group(1)
+            time_divs = group.find_all("div")
 
-            for queue_str in queue_strings:
-                parsed_queues = self.parse_queue_string(queue_str)
-                for queue in parsed_queues:
-                    if queue in queues_data:
-                        queues_data[queue].append(time_range)
+            for div in time_divs:
+                off_tag = div.find("b", class_="off")
+                if off_tag:
+                    time_text = div.get_text(strip=True)
+                    time_text = time_text.replace("OFF", "").strip()
 
+                    time_match = re.search(r'(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})', time_text)
+                    if time_match:
+                        start = self.normalize_time(time_match.group(1))
+                        end = self.normalize_time(time_match.group(2))
+                        time_range = f"{start} - {end}"
 
-        for queue in queues_data:
-            queues_data[queue] = self.merge_time_ranges(queues_data[queue])
+                        if queue_id in queues_data:
+                            queues_data[queue_id].append(time_range)
 
+                    for queue in queues_data:
+                        queues_data[queue] = self.merge_time_ranges(queues_data[queue])
 
         current_date = datetime.now().strftime("%d.%m.%Y")
 

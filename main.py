@@ -21,9 +21,7 @@ from keyboards import (
     reminders_keyboard,
 )
 
-# =========================
-#     НАЛАШТУВАННЯ
-# =========================
+# НАЛАШТУВАННЯ
 
 load_dotenv()
 TOKEN = os.getenv("API_KEY")
@@ -36,7 +34,7 @@ bot = TeleBot(TOKEN)
 USERS_FILE = "users.json"
 DATA_DIR = "parser/data"
 
-# Відомі красиві назви міст (інші будуть city.capitalize())
+# назви міст (інші будуть city.capitalize())
 CITY_TITLES = {
     "rivne": "Рівне",
 }
@@ -50,9 +48,7 @@ LAST_SCHEDULE_HASH = {}  # { "rivne": 123456, "kyiv": 654321 }
 global_timer = None
 
 
-# =========================
-#     ДОПОМІЖНІ ФУНКЦІЇ
-# =========================
+# ДОПОМІЖНІ ФУНКЦІЇ
 
 def list_available_cities():
     """Сканує папку DATA_DIR та повертає список кодів міст (без .json)."""
@@ -78,9 +74,7 @@ def get_default_city() -> str:
     return "rivne"
 
 
-# =========================
-#     КОРИСТУВАЧІ
-# =========================
+# КОРИСТУВАЧІ
 
 def load_users():
     if not os.path.exists(USERS_FILE):
@@ -155,9 +149,7 @@ def get_user_profile(uid: int):
     return prof
 
 
-# =========================
-#     JSON ФАЙЛ ГРАФІКІВ
-# =========================
+# JSON ФАЙЛ ГРАФІКІВ
 
 def load_city_schedule(city: str):
     path = os.path.join(DATA_DIR, f"{city}.json")
@@ -217,9 +209,7 @@ def all_city_queues(city: str):
     return sorted(list(data.get(first_date, {}).keys()))
 
 
-# =========================
-#     ІНТЕРВАЛИ ВІДКЛЮЧЕНЬ
-# =========================
+# ІНТЕРВАЛИ ВІДКЛЮЧЕНЬ
 
 def get_outage_intervals_for_queue(city: str, queue: str):
     """
@@ -265,9 +255,7 @@ def get_outage_intervals_for_queue(city: str, queue: str):
     return intervals
 
 
-# =========================
-#     СПОВІЩЕННЯ ПРО ЗМІНИ
-# =========================
+# СПОВІЩЕННЯ ПРО ЗМІНИ
 
 def send_schedule_change_notification(chat_id, city):
     msg = (
@@ -278,9 +266,7 @@ def send_schedule_change_notification(chat_id, city):
     bot.send_message(chat_id, msg, parse_mode="html")
 
 
-# =========================
-#     ГЕНЕРАЦІЯ ТЕКСТУ ГРАФІКА
-# =========================
+# ГЕНЕРАЦІЯ ТЕКСТУ ГРАФІКА
 
 def build_schedule_message(queues, city, mode, title_prefix=""):
     data = load_city_schedule(city)
@@ -356,9 +342,7 @@ def send_schedules_list(chat_id, queues, city, mode, title_prefix="", message_id
         bot.send_message(chat_id, text, parse_mode="html", reply_markup=kb)
 
 
-# =========================
-#     ФОНОВИЙ ВОРКЕР
-# =========================
+# ФОНОВИЙ ВОРКЕР
 
 def check_and_send_all_alerts():
     global global_timer, LAST_SCHEDULE_HASH
@@ -371,9 +355,7 @@ def check_and_send_all_alerts():
         now = datetime.now()
         users = load_users()
 
-        # -------------------------
-        # 1. Перевірка змін графіка по всіх містах
-        # -------------------------
+        # Перевірка змін графіка по всіх містах
         cities = list_available_cities()
         for city in cities:
             schedule_hash = get_schedule_hash(city)
@@ -387,9 +369,7 @@ def check_and_send_all_alerts():
                         send_schedule_change_notification(int(uid_str), city)
                 LAST_SCHEDULE_HASH[city] = schedule_hash
 
-        # -------------------------
-        # 2. Перевірка нагадувань
-        # -------------------------
+        # Перевірка нагадувань
 
         reminder_window_start = now
         reminder_window_end = now + timedelta(seconds=CHECK_INTERVAL_SEC)
@@ -449,9 +429,7 @@ def check_and_send_all_alerts():
         logging.error(f"Помилка у воркері: {e}")
 
 
-# =========================
-#     ХЕНДЛЕРИ БОТА
-# =========================
+# ХЕНДЛЕРИ БОТА
 
 @bot.message_handler(commands=["start"])
 def cmd_start(m):
@@ -463,8 +441,7 @@ def cmd_start(m):
     bot.send_message(m.chat.id, text, reply_markup=main_menu_keyboard())
 
 
-# ---------- ПРОФІЛЬ ----------
-
+# ПРОФІЛЬ
 @bot.message_handler(func=lambda m: m.text and "проф" in m.text.lower())
 def profile_msg(m):
     prof = get_user_profile(m.from_user.id)
@@ -692,7 +669,7 @@ def toggle_reminder_offset(call):
     bot.answer_callback_query(call.id, msg)
 
 
-# ---------- ГРАФІК СВІТЛА ----------
+# ГРАФІК СВІТЛА
 
 @bot.message_handler(func=lambda m: m.text and "графік" in m.text.lower())
 def graph_default_show(m):
@@ -770,7 +747,7 @@ def graph_navigation(call):
     bot.answer_callback_query(call.id)
 
 
-# ---------- ДОПОМОГА / ДОНАТ ----------
+# ДОПОМОГА / ДОНАТ
 
 @bot.message_handler(func=lambda m: m.text and "допом" in m.text.lower())
 def help_msg(m):
@@ -791,9 +768,7 @@ def menu_back(call):
     bot.answer_callback_query(call.id)
 
 
-# =========================
-#     СТАРТ БОТА + ВОРКЕР
-# =========================
+# СТАРТ БОТА + ВОРКЕР
 
 logging.info(f"Запуск воркера… наступна перевірка через {CHECK_INTERVAL_SEC} секунд.")
 global_timer = Timer(CHECK_INTERVAL_SEC, check_and_send_all_alerts)

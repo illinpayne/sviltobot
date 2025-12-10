@@ -8,9 +8,7 @@ from telebot.types import (
 DONATION_LINK = "https://send.monobank.ua/jar/YOUR_DONATION_JAR_ID"
 
 
-# ===============================
-#      ГОЛОВНЕ МЕНЮ
-# ===============================
+# ГОЛОВНЕ МЕНЮ
 
 def main_menu_keyboard():
     kb = ReplyKeyboardMarkup(resize_keyboard=True)
@@ -20,9 +18,7 @@ def main_menu_keyboard():
     return kb
 
 
-# ===============================
-#          ПРОФІЛЬ
-# ===============================
+#  ПРОФІЛЬ
 
 def profile_keyboard(prof: dict):
     """
@@ -51,9 +47,7 @@ def profile_keyboard(prof: dict):
     return kb
 
 
-# ===============================
-#      ВИБІР ЧЕРГ
-# ===============================
+# ВИБІР ЧЕРГ
 
 def queues_keyboard(selected: list, all_queues: list):
     kb = InlineKeyboardMarkup(row_width=3)
@@ -67,9 +61,7 @@ def queues_keyboard(selected: list, all_queues: list):
     return kb
 
 
-# ===============================
-#    ВИБІР МІСТА
-# ===============================
+# ВИБІР МІСТА
 
 def city_select_keyboard(cities, current_city: str):
     """
@@ -86,9 +78,7 @@ def city_select_keyboard(cities, current_city: str):
     return kb
 
 
-# ===============================
-#   НАЛАШТУВАННЯ НАГАДУВАНЬ
-# ===============================
+# НАЛАШТУВАННЯ НАГАДУВАНЬ
 
 def reminders_keyboard(active_offsets: list):
     """
@@ -106,9 +96,7 @@ def reminders_keyboard(active_offsets: list):
     return kb
 
 
-# ===============================
-#      НАВІГАЦІЯ ГРАФІКУ
-# ===============================
+# НАВІГАЦІЯ ГРАФІКУ
 
 def schedule_navigation_keyboard(current_mode: str, show_all_queues: bool):
     """
@@ -155,9 +143,7 @@ def schedule_navigation_keyboard(current_mode: str, show_all_queues: bool):
     return kb
 
 
-# ===============================
-#     ВИБІР НАГАДУВАННЯ (запас)
-# ===============================
+# ВИБІР НАГАДУВАННЯ (запас)
 
 def reminder_selection_keyboard(city: str, selected_queues: list, outage_finder):
     """
@@ -179,9 +165,7 @@ def reminder_selection_keyboard(city: str, selected_queues: list, outage_finder)
     return kb, all_events
 
 
-# ===============================
-#      ДОПОМОГА / ДОНАТ
-# ===============================
+# ДОПОМОГА / ДОНАТ
 
 def help_keyboard():
     kb = InlineKeyboardMarkup()

@@ -29,7 +29,7 @@ parsers = [
             url="https://alerts.org.ua/volynska-oblast/",
             save_path="data/volyn.json"
         ),
-        VolynParser
+        VolynParser()
     ),
     # (
     #     ParseConfig(

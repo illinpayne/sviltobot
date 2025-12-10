@@ -15,7 +15,7 @@ from keyboards import (
     profile_keyboard,
     queues_keyboard,
     schedule_navigation_keyboard,
-    reminder_selection_keyboard,  # на майбутнє
+    reminder_selection_keyboard, 
     help_keyboard,
     city_select_keyboard,
     reminders_keyboard,
@@ -476,23 +476,6 @@ def edit_queues(call):
         call.message.message_id,
         reply_markup=kb
     )
-# @bot.callback_query_handler(func=lambda c: c.data == "profile_edit")
-# def edit_queues(call):
-#     prof = get_user_profile(call.from_user.id)
-#     all_q = all_city_queues(prof["city"])
-#     if not all_q:
-#         bot.answer_callback_query(call.id, "Немає даних про черги для цього міста.")
-#         return
-#
-#     kb = queues_keyboard(prof["queues"], all_q)
-#
-#     bot.edit_message_text(
-#         "Оберіть ваші черги:",
-#         call.message.chat.id,
-#         call.message.message_id,
-#         reply_markup=kb,
-#     )
-#     bot.answer_callback_query(call.id)
 
 
 @bot.callback_query_handler(func=lambda c: c.data.startswith("queue_toggle_"))

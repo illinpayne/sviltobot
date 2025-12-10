@@ -5,7 +5,7 @@ from ..core.models import RegionParseResult, ParseConfig
 from .base import BaseRegionParser
 
 
-class RivneParser(BaseRegionParser):
+class IvanoFrankivskParser(BaseRegionParser):
 
     def normalize_time(self, time_str: str) -> str:
         return time_str.replace(':', '-')
@@ -13,6 +13,7 @@ class RivneParser(BaseRegionParser):
     def merge_time_ranges(self, time_ranges: list) -> list:
         if not time_ranges:
             return []
+
 
         sorted_ranges = sorted(time_ranges, key=lambda x: x.split(" - ")[0])
 
@@ -37,6 +38,7 @@ class RivneParser(BaseRegionParser):
             html = await resp.text()
 
         soup = BeautifulSoup(html, "html.parser")
+
 
         queues_data = {
             "1.1": [], "1.2": [],
@@ -76,11 +78,14 @@ class RivneParser(BaseRegionParser):
                         end = self.normalize_time(time_match.group(2))
                         time_range = f"{start} - {end}"
 
+
                         if queue_id in queues_data:
                             queues_data[queue_id].append(time_range)
 
         for queue in queues_data:
             queues_data[queue] = self.merge_time_ranges(queues_data[queue])
+
+
 
         current_date = datetime.now().strftime("%d.%m.%Y")
 

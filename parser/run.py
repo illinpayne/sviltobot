@@ -1,10 +1,30 @@
 import asyncio
-
-from parser.strategies.odesa import OdesaParser
-from parser.strategies.rivne import RivneParser
-from parser.strategies.volyn import VolynParser
 from parser.core.models import ParseConfig
 from parser.scheduler.scheduler import run_periodically
+from parser.strategies import (
+    ZaporizhzhiaParser,
+    DniproParser,
+    CherkasyParser,
+    KharkivParser,
+    SumyParser,
+    PoltavaParser,
+    ChernihivParser,
+    MykolaivParser,
+    KirovohradParser,
+    KyivCityParser,
+    KyivOblParser,
+    VinnytsiaParser,
+    TernopilParser,
+    ChernivtsiParser,
+    ZhytomyrParser,
+    KhmelnytskyiParser,
+    IvanoFrankivskParser,
+    ZakarpattiaParser,
+    LvivParser,
+    OdesaParser,
+    RivneParser,
+    VolynParser
+)
 
 parsers = [
     (
@@ -31,149 +51,157 @@ parsers = [
         ),
         VolynParser()
     ),
-    # (
-    #     ParseConfig(
-    #         region_name="Тернопільська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622368/",
-    #         save_path="data/ternopil.json"
-    #     ),
-    #     parser
-    # ),
-    # (
-    #     ParseConfig(
-    #         region_name="Вінницька область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622232/",
-    #         save_path="data/vinnytsia.json"
-    #     ),
-    #     parser
-    # ),
-
-    # (
-    #     ParseConfig(
-    #         region_name="Житомирська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622240/",
-    #         save_path="data/zhytomyr.json"
-    #     ),
-    #     parser
-    # ),
-    # (
-    #     ParseConfig(
-    #         region_name="Закарпатська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622272/",
-    #         save_path="data/zakarpattia.json"
-    #     ),
-    #     parser
-    # ),
-    # (
-    #     ParseConfig(
-    #         region_name="Івано-Франківська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622248/",
-    #         save_path="data/ivano-frankivsk.json"
-    #     ),
-    #     parser
-    # ),
-    # (
-    #     ParseConfig(
-    #         region_name="Київська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622252/",
-    #         save_path="data/kyiv.json"
-    #     ),
-    #     parser
-    # ),
-    # (
-    #     ParseConfig(
-    #         region_name="Кіровоградська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622304/",
-    #         save_path="data/kirovohrad.json"
-    #     ),
-    #     parser
-    # ),
-    # (
-    #     ParseConfig(
-    #         region_name="Львівська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622260/",
-    #         save_path="data/lviv.json"
-    #     ),
-    #     parser
-    # ),
-    # (
-    #     ParseConfig(
-    #         region_name="Миколаївська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622264/",
-    #         save_path="data/mykolaiv.json"
-    #     ),
-    #     parser
-    # ),
-    # # Полтавська область
-    # (
-    #     ParseConfig(
-    #         region_name="Полтавська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622276/",
-    #         save_path="data/poltava.json"
-    #     ),
-    #     parser
-    # ),
-    # # Сумська область
-    # (
-    #     ParseConfig(
-    #         region_name="Сумська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622280/",
-    #         save_path="data/sumy.json"
-    #     ),
-    #     parser
-    # ),
-    # # Харківська область
-    # (
-    #     ParseConfig(
-    #         region_name="Харківська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622284/",
-    #         save_path="data/kharkiv.json"
-    #     ),
-    #     parser
-    # ),
-    # # Херсонська область
-    # (
-    #     ParseConfig(
-    #         region_name="Херсонська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622288/",
-    #         save_path="data/kherson.json"
-    #     ),
-    #     parser
-    # ),
-    # # Хмельницька область
-    # (
-    #     ParseConfig(
-    #         region_name="Хмельницька область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622292/",
-    #         save_path="data/khmelnytskyi.json"
-    #     ),
-    #     parser
-    # ),
-    # # Черкаська область
-    # (
-    #     ParseConfig(
-    #         region_name="Черкаська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622296/",
-    #         save_path="data/cherkasy.json"
-    #     ),
-    #     parser
-    # ),
-    # (
-    #     ParseConfig(
-    #         region_name="Чернівецька область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622300/",
-    #         save_path="data/chernivtsi.json"
-    #     ),
-    #     parser
-    # ),
-    # (
-    #     ParseConfig(
-    #         region_name="Чернігівська область",
-    #         url="https://www.uz.gov.ua/about/activity/electropostachannia/electro_consumers/temporary_shutdown/grafikiobmezhen/622304/",
-    #         save_path="data/chernihiv.json"
-    #     ),
-    #     parser
-    # ),
+    (
+        ParseConfig(
+            region_name="Запорізька область",
+            url="https://alerts.org.ua/zaporizka-oblast/",
+            save_path="data/zaporizhzhia.json"
+        ),
+        ZaporizhzhiaParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Дніпропетровська область",
+            url="https://alerts.org.ua/dnipropetrovska-oblast/",
+            save_path="data/dnipro.json"
+        ),
+        DniproParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Тернопільська область",
+            url="https://alerts.org.ua/ternopilska-oblast/",
+            save_path="data/ternopil.json"
+        ),
+        TernopilParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Вінницька область",
+            url="https://alerts.org.ua/vinnytcka-oblast/",
+            save_path="data/vinnytsia.json"
+        ),
+        VinnytsiaParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Житомирська область",
+            url="https://alerts.org.ua/zhytomyrska-oblast/",
+            save_path="data/zhytomyr.json"
+        ),
+        ZhytomyrParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Закарпатська область",
+            url="https://alerts.org.ua/zakarpatska-oblast/",
+            save_path="data/zakarpattia.json"
+        ),
+        ZakarpattiaParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Івано-Франківська область",
+            url="https://alerts.org.ua/ivano-frankivska-oblast/",
+            save_path="data/ivano-frankivsk.json"
+        ),
+        IvanoFrankivskParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Київська область",
+            url="https://alerts.org.ua/kyivska-oblast/",
+            save_path="data/kyivobl.json"
+        ),
+        KyivOblParser()
+    ),
+(
+        ParseConfig(
+            region_name="місто Київ",
+            url="https://alerts.org.ua/kyiv/",
+            save_path="data/kyivcity.json"
+        ),
+        KyivCityParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Кіровоградська область",
+            url="https://alerts.org.ua/kirovogradska-oblast/",
+            save_path="data/kirovohrad.json"
+        ),
+        KirovohradParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Львівська область",
+            url="https://alerts.org.ua/lvivska-oblast/",
+            save_path="data/lviv.json"
+        ),
+        LvivParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Миколаївська область",
+            url="https://alerts.org.ua/mykolaivska-oblast/",
+            save_path="data/mykolaiv.json"
+        ),
+        MykolaivParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Полтавська область",
+            url="https://alerts.org.ua/poltavska-oblast/",
+            save_path="data/poltava.json"
+        ),
+        PoltavaParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Сумська область",
+            url="https://alerts.org.ua/sumska-oblast/",
+            save_path="data/sumy.json"
+        ),
+        SumyParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Харківська область",
+            url="https://alerts.org.ua/harkivska-oblast/",
+            save_path="data/kharkiv.json"
+        ),
+        KharkivParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Хмельницька область",
+            url="https://alerts.org.ua/hmelnitcka-oblast/",
+            save_path="data/khmelnytskyi.json"
+        ),
+        KhmelnytskyiParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Черкаська область",
+            url="https://alerts.org.ua/cherkaska-oblast/",
+            save_path="data/cherkasy.json"
+        ),
+        CherkasyParser()
+    ),    (
+        ParseConfig(
+            region_name="Чернівецька область",
+            url="https://alerts.org.ua/chernivetcka-oblast/",
+            save_path="data/chernivtsi.json"
+        ),
+        ChernivtsiParser()
+    ),
+    (
+        ParseConfig(
+            region_name="Чернігівська область",
+            url="https://alerts.org.ua/chernigivska-oblast/",
+            save_path="data/chernihiv.json"
+        ),
+        ChernihivParser()
+    ),
 ]
 
 asyncio.run(run_periodically(parsers))

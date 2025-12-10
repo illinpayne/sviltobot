@@ -7,14 +7,12 @@ from .base import BaseRegionParser
 
 class VolynParser(BaseRegionParser):
 
-
     def normalize_time(self, time_str: str) -> str:
-        return time_str.replace('.', '-')
+        return time_str.replace(':', '-')
 
     def merge_time_ranges(self, time_ranges: list) -> list:
         if not time_ranges:
             return []
-
 
         sorted_ranges = sorted(time_ranges, key=lambda x: x.split(" - ")[0])
 
@@ -23,6 +21,7 @@ class VolynParser(BaseRegionParser):
 
         for time_range in sorted_ranges[1:]:
             start, end = time_range.split(" - ")
+
             if current_end == start:
                 current_end = end
             else:
@@ -38,7 +37,6 @@ class VolynParser(BaseRegionParser):
             html = await resp.text()
 
         soup = BeautifulSoup(html, "html.parser")
-
 
         queues_data = {
             "1.1": [], "1.2": [],
@@ -66,9 +64,11 @@ class VolynParser(BaseRegionParser):
 
             for div in time_divs:
                 off_tag = div.find("b", class_="off")
-                if off_tag:
+                maybe_tag = div.find("b", class_="maybe")
+
+                if off_tag or maybe_tag:
                     time_text = div.get_text(strip=True)
-                    time_text = time_text.replace("OFF", "").strip()
+                    time_text = time_text.replace("OFF", "").replace("?", "").strip()
 
                     time_match = re.search(r'(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})', time_text)
                     if time_match:
@@ -79,8 +79,8 @@ class VolynParser(BaseRegionParser):
                         if queue_id in queues_data:
                             queues_data[queue_id].append(time_range)
 
-                    for queue in queues_data:
-                        queues_data[queue] = self.merge_time_ranges(queues_data[queue])
+        for queue in queues_data:
+            queues_data[queue] = self.merge_time_ranges(queues_data[queue])
 
         current_date = datetime.now().strftime("%d.%m.%Y")
 

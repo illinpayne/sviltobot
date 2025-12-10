@@ -5,7 +5,7 @@ from ..core.models import RegionParseResult, ParseConfig
 from .base import BaseRegionParser
 
 
-class RivneParser(BaseRegionParser):
+class PoltavaParser(BaseRegionParser):
 
     def normalize_time(self, time_str: str) -> str:
         return time_str.replace(':', '-')

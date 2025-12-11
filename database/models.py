@@ -9,6 +9,8 @@ class Subscription:
     queue_number: str
     name: str
 
+    notifications_enabled: bool = True
+    reminder_offsets: list[int] = field(default_factory=list)
 
 @dataclass
 class User:
@@ -18,6 +20,6 @@ class User:
     last_name: Optional[str] = None
     username: Optional[str] = None
 
-    subscriptions: dict[str, Subscription] = field(default_factory=dict)
+    subscriptions: list[Subscription] = field(default_factory=list)
 
     created_at: datetime = field(default_factory=datetime.now)

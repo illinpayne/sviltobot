@@ -14,7 +14,7 @@ if not TOKEN:
 
 # --- ШЛЯХИ ---
 USERS_FILE = "../users.json"
-DATA_DIR = "../parser/data"
+DATA_DIR = "parser/data"
 
 # --- КОНФІГУРАЦІЯ БОТА ---
 CHECK_INTERVAL_SEC = 300  # Раз на 5 хвилин

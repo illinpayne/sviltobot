@@ -4,7 +4,7 @@ from telebot import TeleBot
 import telebot
 import logging
 
-from keyboards import (
+from tg_bot.keyboards import (
     main_menu_keyboard,
     profile_keyboard,
     queues_keyboard,
@@ -15,18 +15,24 @@ from keyboards import (
     reminders_keyboard,
 )
 
-from config import (
+from app_utils.config import (
+    REGIONS,
+)
+
+from app_utils.config_helper import (
     get_user_profile,
     save_user_profile,
     get_area_title,
-    all_area_queues,
     list_available_areas,
-    REGIONS,
+)
+
+from app_utils.schedule_helper import (
+    all_area_queues,
     build_schedule_message,
 )
 
 # Налаштування рівня логування telebot
-telebot.logger.setLevel(logging.DEBUG)
+telebot.logger.setLevel(logging.INFO)
 
 
 def register_handlers(bot: TeleBot):
@@ -39,9 +45,18 @@ def register_handlers(bot: TeleBot):
         kb = schedule_navigation_keyboard(mode, show_all_queues)
 
         if message_id:
-            bot.edit_message_text(text, chat_id, message_id, parse_mode="html", reply_markup=kb)
+            # 1. Якщо message_id є, ми намагаємося РЕДАГУВАТИ (це навігація)
+            try:
+                bot.edit_message_text(text, chat_id, message_id, parse_mode="html", reply_markup=kb)
+            except telebot.apihelper.ApiTelegramException as e:
+                if "message is not modified" not in str(e):
+                    logging.error(f"Невідома API помилка при редагуванні: {e}")
+            except Exception as e:
+                logging.error(f"Загальна помилка при edit_message_text: {e}")
         else:
+            # 2. Якщо message_id НЕМАЄ, ми НАДСИЛАЄМО нове повідомлення (це перший запит з меню)
             bot.send_message(chat_id, text, parse_mode="html", reply_markup=kb)
+
 
     # --- ХЕНДЛЕРИ БОТА ---
 
@@ -398,4 +413,7 @@ def register_handlers(bot: TeleBot):
         text = "Оберіть дію знизу 👇"
         bot.send_message(chat_id, text, reply_markup=main_menu_keyboard())
 
-        bot.answer_callback_query(call.id)
+        try:
+            bot.answer_callback_query(call.id)  # <--- ОБРОБКА ПОМИЛКИ ТУТ
+        except Exception as e:
+            logging.warning(f"Не вдалося відповісти на застарілий callback {call.id}: {e}")

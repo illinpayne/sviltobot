@@ -1,6 +1,7 @@
 # keyboards.py
 from telebot.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, KeyboardButton, InlineKeyboardButton
-from config import REGIONS, get_area_title, list_available_areas
+from app_utils.config import REGIONS
+from app_utils.config_helper import list_available_areas
 
 
 # --- REPLY КЛАВІАТУРИ ---

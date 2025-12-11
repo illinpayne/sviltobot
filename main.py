@@ -1,25 +1,32 @@
 # main.py
 
-import logging
 from datetime import datetime, timedelta
 from threading import Timer
 
 from telebot import TeleBot
 
-from config import (
+from app_utils.config import (
     TOKEN,
     CHECK_INTERVAL_SEC,
-    load_users,
-    get_schedule_hash,
-    get_user_profile,
-    get_area_title,
-    get_outage_intervals_for_queue,
-    list_available_areas,
     SENT_REMINDERS_LOG,
     LAST_SCHEDULE_HASH,
     logger,
 )
-from handlers import register_handlers
+
+from app_utils.config_helper import (
+    load_users,
+    get_user_profile,
+    get_area_title,
+    list_available_areas,
+)
+
+from app_utils.schedule_helper import (
+    get_schedule_hash,
+    get_outage_intervals_for_queue,
+)
+
+
+from tg_bot.handlers import register_handlers
 
 # --- ІНІЦІАЛІЗАЦІЯ БОТА ---
 

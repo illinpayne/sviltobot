@@ -1,6 +1,5 @@
 import asyncio
 import aiohttp
-from datetime import datetime
 from ..core.context import ParseContext
 from ..storage.json_writer import save_to_json
 
@@ -12,8 +11,5 @@ async def run_periodically(parsers):
                 result = await ctx.execute(session, config)
 
                 save_to_json(result.to_dict(), config.save_path)
-
-
-                print(f"[{datetime.now()}] Parsed {config.region_name}")
 
         await asyncio.sleep(7200)  # 2 години

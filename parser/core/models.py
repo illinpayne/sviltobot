@@ -3,7 +3,6 @@ from typing import Dict, List
 
 @dataclass
 class ParseConfig:
-    region_name: str            # "область"
     url: str                    # URL парсингу
     save_path: str              # куди писати JSON
 

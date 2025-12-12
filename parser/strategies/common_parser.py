@@ -1,11 +1,12 @@
 import re
 from bs4 import BeautifulSoup
 from datetime import datetime
+from abc import abstractmethod
 from ..core.models import RegionParseResult, ParseConfig
 from .base import BaseRegionParser
 
 
-class VinnytsiaParser(BaseRegionParser):
+class CommonRegionParser(BaseRegionParser):
 
     def normalize_time(self, time_str: str) -> str:
         return time_str.replace(':', '-')
@@ -32,21 +33,25 @@ class VinnytsiaParser(BaseRegionParser):
 
         return merged
 
+    def init_queues_data(self) -> dict:
+        return {
+            f"{i}.{j}": [] for i in range(1, 7) for j in (1, 2)
+        }
+
+    @abstractmethod
+    def extract_queue_id(self, group_name: str) -> str:
+        pass
+
+    @abstractmethod
+    def map_queue_id(self, queue_id: str, time_range: str, queues_data: dict):
+        pass
+
     async def parse(self, session, config: ParseConfig) -> RegionParseResult:
         async with session.get(config.url) as resp:
             html = await resp.text()
 
         soup = BeautifulSoup(html, "html.parser")
-
-        queues_data = {
-            "1.1": [], "1.2": [],
-            "2.1": [], "2.2": [],
-            "3.1": [], "3.2": [],
-            "4.1": [], "4.2": [],
-            "5.1": [], "5.2": [],
-            "6.1": [], "6.2": []
-        }
-
+        queues_data = self.init_queues_data()
         groups = soup.find_all("div", class_="group")
 
         for group in groups:
@@ -55,11 +60,11 @@ class VinnytsiaParser(BaseRegionParser):
                 continue
 
             group_name = name_tag.get_text(strip=True)
-            match = re.search(r'(\d+\.\d+)', group_name)
-            if not match:
+            queue_id = self.extract_queue_id(group_name)
+
+            if not queue_id:
                 continue
 
-            queue_id = match.group(1)
             time_divs = group.find_all("div")
 
             for div in time_divs:
@@ -76,8 +81,7 @@ class VinnytsiaParser(BaseRegionParser):
                         end = self.normalize_time(time_match.group(2))
                         time_range = f"{start} - {end}"
 
-                        if queue_id in queues_data:
-                            queues_data[queue_id].append(time_range)
+                        self.map_queue_id(queue_id, time_range, queues_data)
 
         for queue in queues_data:
             queues_data[queue] = self.merge_time_ranges(queues_data[queue])

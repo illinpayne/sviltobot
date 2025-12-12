@@ -17,7 +17,7 @@ USERS_FILE = "../users.json"
 DATA_DIR = "parser/data"
 
 # --- КОНФІГУРАЦІЯ БОТА ---
-CHECK_INTERVAL_SEC = 300  # Раз на 5 хвилин
+CHECK_INTERVAL_SEC = 60  # Раз на 1 хвилину
 
 # --- МАПА РЕГІОНІВ ТА ОБЛАСТЕЙ ---
 REGIONS = {

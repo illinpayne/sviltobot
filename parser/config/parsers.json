@@ -1,0 +1,114 @@
+{
+  "parsers": [
+    {
+      "url": "https://alerts.org.ua/rivnenska-oblast/",
+      "save_path": "data/rivne.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/odeska-oblast/",
+      "save_path": "data/odesa.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/volynska-oblast/",
+      "save_path": "data/volyn.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/zaporizka-oblast/",
+      "save_path": "data/zaporizhzhia.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/dnipropetrovska-oblast/",
+      "save_path": "data/dnipro.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/ternopilska-oblast/",
+      "save_path": "data/ternopil.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/vinnytcka-oblast/",
+      "save_path": "data/vinnytsia.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/zhytomyrska-oblast/",
+      "save_path": "data/zhytomyr.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/zakarpatska-oblast/",
+      "save_path": "data/zakarpattia.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/ivano-frankivska-oblast/",
+      "save_path": "data/ivano-frankivsk.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/kyivska-oblast/",
+      "save_path": "data/kyivobl.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/kyiv/",
+      "save_path": "data/kyivcity.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/kirovogradska-oblast/",
+      "save_path": "data/kirovohrad.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/lvivska-oblast/",
+      "save_path": "data/lviv.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/mykolaivska-oblast/",
+      "save_path": "data/mykolaiv.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/poltavska-oblast/",
+      "save_path": "data/poltava.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/sumska-oblast/",
+      "save_path": "data/sumy.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/harkivska-oblast/",
+      "save_path": "data/kharkiv.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/hmelnitcka-oblast/",
+      "save_path": "data/khmelnytskyi.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/cherkaska-oblast/",
+      "save_path": "data/cherkasy.json",
+      "parser": "BaseParser"
+    },
+    {
+      "url": "https://alerts.org.ua/chernivetcka-oblast/",
+      "save_path": "data/chernivtsi.json",
+      "parser": "ChernivtsiParser"
+    },
+    {
+      "url": "https://alerts.org.ua/chernigivska-oblast/",
+      "save_path": "data/chernihiv.json",
+      "parser": "BaseParser"
+    }
+  ]
+}

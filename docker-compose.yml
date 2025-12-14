@@ -1,0 +1,18 @@
+services:
+  svitlobot:
+    build: .
+    container_name: svitlobot
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - TZ=Europe/Kyiv
+    command: /app/start.sh
+    volumes:
+      - ./data:/app/parser/data
+      - ./parser:/app/parser
+      - ./main.py:/app/main.py
+      - ./tg_bot:/app/tg_bot
+      - ./app_utils:/app/app_utils
+      - ./database:/app/database
+      - ./parser/config:/app/config:ro

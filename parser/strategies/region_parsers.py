@@ -2,7 +2,6 @@ import re
 from .common_parser import CommonRegionParser
 
 class BaseParser(CommonRegionParser):
-
     def extract_queue_id(self, group_name: str) -> str:
         match = re.search(r'(\d+\.\d+)', group_name)
         return match.group(1) if match else None
@@ -13,7 +12,6 @@ class BaseParser(CommonRegionParser):
 
 
 class ChernivtsiParser(CommonRegionParser):
-
     def extract_queue_id(self, group_name: str) -> str:
         match = re.search(r'Група\s+(\d+)', group_name)
         return match.group(1) if match else None

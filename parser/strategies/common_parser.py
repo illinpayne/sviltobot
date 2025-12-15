@@ -7,7 +7,6 @@ from .base import BaseRegionParser
 
 
 class CommonRegionParser(BaseRegionParser):
-
     def normalize_time(self, time_str: str) -> str:
         return time_str.replace(':', '-')
 
@@ -16,13 +15,11 @@ class CommonRegionParser(BaseRegionParser):
             return []
 
         sorted_ranges = sorted(time_ranges, key=lambda x: x.split(" - ")[0])
-
         merged = []
         current_start, current_end = sorted_ranges[0].split(" - ")
 
         for time_range in sorted_ranges[1:]:
             start, end = time_range.split(" - ")
-
             if current_end == start:
                 current_end = end
             else:
@@ -30,7 +27,6 @@ class CommonRegionParser(BaseRegionParser):
                 current_start, current_end = start, end
 
         merged.append(f"{current_start} - {current_end}")
-
         return merged
 
     def init_queues_data(self) -> dict:
@@ -52,10 +48,12 @@ class CommonRegionParser(BaseRegionParser):
 
         soup = BeautifulSoup(html, "html.parser")
         queues_data = self.init_queues_data()
+
         groups = soup.find_all("div", class_="group")
 
         for group in groups:
-            name_tag = group.find("b", class_="name")
+            # Виправлено: шукаємо по правильному класу
+            name_tag = group.find("b", class_="group-name")
             if not name_tag:
                 continue
 
@@ -65,28 +63,37 @@ class CommonRegionParser(BaseRegionParser):
             if not queue_id:
                 continue
 
-            time_divs = group.find_all("div")
+            # Шукаємо період всередині групи
+            period_div = group.find("div", class_="period")
+            if not period_div:
+                continue
+
+            # Знаходимо всі div з data-start і data-end
+            time_divs = period_div.find_all("div", attrs={"data-start": True, "data-end": True})
 
             for div in time_divs:
+                # Перевіряємо чи є OFF статус (class="stts2" або <b class="off">)
                 off_tag = div.find("b", class_="off")
                 maybe_tag = div.find("b", class_="maybe")
+                has_off_class = "stts2" in div.get("class", [])
 
-                if off_tag or maybe_tag:
-                    time_text = div.get_text(strip=True)
-                    time_text = time_text.replace("OFF", "").replace("?", "").strip()
+                if off_tag or maybe_tag or has_off_class:
+                    # Отримуємо час з атрибутів
+                    start_time = div.get("data-start")
+                    end_time = div.get("data-end")
 
-                    time_match = re.search(r'(\d{2}:\d{2})\s*-\s*(\d{2}:\d{2})', time_text)
-                    if time_match:
-                        start = self.normalize_time(time_match.group(1))
-                        end = self.normalize_time(time_match.group(2))
+                    if start_time and end_time:
+                        start = self.normalize_time(start_time)
+                        end = self.normalize_time(end_time)
                         time_range = f"{start} - {end}"
-
                         self.map_queue_id(queue_id, time_range, queues_data)
 
+        # Об'єднуємо діапазони для кожної черги
         for queue in queues_data:
             queues_data[queue] = self.merge_time_ranges(queues_data[queue])
 
         current_date = datetime.now().strftime("%d.%m.%Y")
+        print(queues_data)
 
         return RegionParseResult(
             date=current_date,
